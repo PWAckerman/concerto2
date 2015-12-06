@@ -16,10 +16,15 @@ let express = require('express'),
     sessionMessageCtrl = require('./app/controllers/sessionmessage.controller.js'),
     sharedSessionSpaceCtrl = require('./app/controllers/sharedsessionspace.controller.js'),
     studentGroupCtrl = require('./app/controllers/studentgroup.controller.js'),
+    auth = require('./app/middleware/auth'),
+    FacebookStrategy = require('passport-facebook').Strategy,
+    FacebookConfig = require('./config/config.js').FACEBOOK_CONF,
+    passport = require('passport'),
     logger = require('morgan'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
-    mongoose = require('mongoose'),
+    session = require("express-session"),
+    cookieParser = require('cookie-parser'),
     port = 3030,
     env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -31,10 +36,13 @@ concerto
   //
   // })
   .use(bodyParser.json())
+  .use(cookieParser())
   .use(cors())
+  .use(session({secret: 'anything'}))
   .get('/',
     (req, res)=> {
       // res.render('index')
+      console.log('Working...');
       res.json('Working...')
     }
   )
@@ -263,12 +271,40 @@ concerto
       return courseCtrl.addCourse(req, res);
     }
   )
-
+  .use(passport.initialize())
+  .use(passport.session())
   .listen(port)
 
+passport.use('facebook',
+  new FacebookStrategy(
+    {
+      clientID: FacebookConfig.clientID,
+      clientSecret: FacebookConfig.clientSecret,
+      callbackURL: FacebookConfig.callbackURL
+    },
+    (accessToken, refreshToken, profile, done) => {
+      process.nextTick(function () {
+        return done(null, profile);
+      });
+    })
+);
+
+passport.serializeUser(
+  (user, done) => done(null, user)
+);
+passport.deserializeUser(
+  (user, done) => done(null, user)
+);
+
+require("./config/strategies/facebook.strategy")
+// require('./config/passport')(concerto);
+concerto
+  .get('/auth/facebook', passport.authenticate('facebook'),
+    (req, res) => console.log("I'm inconsequential!")
+  )
+  .get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login'}),
+    (req, res) => res.redirect('/')
+  )
 console.log('Listening on port ' + port + '...');
-mongoose.connect('mongodb://localhost/concerto');
-let db = mongoose.connection;
-db
-  .on('error', console.error.bind(console, 'connection error...'))
-  .once('open', () => console.log('database connection established'))
+require('./config/db.js');
