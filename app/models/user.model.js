@@ -1,5 +1,6 @@
 "use strict";
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
+let findOrCreate = require('mongoose-findorcreate')
 let Schema = mongoose.Schema;
 let ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -10,7 +11,13 @@ let userSchema = new Schema({
   status: String,
   internalID: String,
   usertype: String,
-  UID: ObjectId
+  UID: ObjectId,
+  gender: String,
+  fbId: {type: String, required: true},
+  profilePicture: String,
+  currentToken: {type: String},
+  logins: {type: Number, default: 0}
 })
 
+userSchema.plugin(findOrCreate);
 module.exports = mongoose.model('User', userSchema);

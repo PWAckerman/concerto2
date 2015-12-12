@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="122.88649mm"
+   height="106.65489mm"
+   viewBox="0 0 435.42457 377.91103"
+   id="svg6723"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="menubtn.svg">
+  <defs
+     id="defs6725" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="222.14284"
+     inkscape:cy="124.76826"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1877"
+     inkscape:window-height="1033"
+     inkscape:window-x="22"
+     inkscape:window-y="6"
+     inkscape:window-maximized="0">
+    <sodipodi:guide
+       position="495.71427,271.9111"
+       orientation="0,1"
+       id="guide6788" />
+    <sodipodi:guide
+       position="178.57141,170.48253"
+       orientation="1,0"
+       id="guide6790" />
+    <sodipodi:guide
+       position="413.74922,145.32602"
+       orientation="0,1"
+       id="guide6792" />
+    <sodipodi:guide
+       position="355.66545,349.37683"
+       orientation="1,0"
+       id="guide6794" />
+    <sodipodi:guide
+       position="495.71427,271.9111"
+       orientation="0,1"
+       id="guide6796" />
+    <sodipodi:guide
+       position="514.2857,243.33967"
+       orientation="0,1"
+       id="guide6798" />
+    <sodipodi:guide
+       position="414.28571,243.33967"
+       orientation="0,1"
+       id="guide6800" />
+    <sodipodi:guide
+       position="328.39133,222.09761"
+       orientation="0,1"
+       id="guide6802" />
+    <sodipodi:guide
+       position="365.2619,193.30827"
+       orientation="0,1"
+       id="guide6804" />
+    <sodipodi:guide
+       position="335.4624,174.11537"
+       orientation="0,1"
+       id="guide6806" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid6818"
+       originx="-101.42859"
+       originy="-322.3746" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata6728">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-101.42859,-352.07656)">
+    <g
+       id="g6808"
+       transform="matrix(0.67082745,0,0,1,51.043422,0)">
+      <g
+         id="g6813"
+         transform="matrix(3.3401225,0,0,3.3401225,-869.66854,-1200.8587)">
+        <rect
+           style="opacity:1;fill:#fffafa;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-opacity:1"
+           id="rect6762"
+           width="194.32994"
+           height="16.102676"
+           x="282.85715"
+           y="464.93362"
+           ry="8.0513382" />
+        <rect
+           ry="8.0513382"
+           y="514.1582"
+           x="282.85715"
+           height="16.102676"
+           width="194.32994"
+           id="rect6784"
+           style="opacity:1;fill:#fffafa;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-opacity:1" />
+        <rect
+           style="opacity:1;fill:#fffafa;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-opacity:1"
+           id="rect6786"
+           width="194.32994"
+           height="16.102676"
+           x="282.85715"
+           y="561.97382"
+           ry="8.0513382" />
+      </g>
+    </g>
+  </g>
+</svg>

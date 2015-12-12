@@ -1,13 +1,28 @@
-var GroupChat = require('../models/groupChat.model.js');
+'use strict';
+let GroupChat = require('../models/groupChat.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addGroupChat = (req, res) => {
-  var entry = new GroupChat({
+  let entry = new GroupChat({
     groupId: req.body.groupId
   });
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

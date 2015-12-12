@@ -1,0 +1,80 @@
+<div class="row" style="padding-top: 50px; padding-bottom: 150px;">
+  <div class="row-container">
+    <div class="course slush-b white-t fadeinload" style="display: inline-block;">
+      <div class="black-t course-header">FOO-101</div>
+      <div class="black-t course-title">Introduction to Foo</div>
+      <div class="professor icon-profile-male"></div>
+      <div class="professor-name">Dr. Oberon</div>
+    </div>
+    <div class="course slush-b white-t fadeinload" style="display: inline-block;">
+      <div class="black-t course-header">BAR-201</div>
+      <div class="black-t course-title">Cognitive Factors of Bar and Bar-Like Composites</div>
+      <div class="professor icon-profile-male"></div>
+      <div class="professor-name">Dr. Bob</div>
+    </div>
+    <div class="course slush-b white-t fadeinload" style="display: inline-block;">
+      <div class="black-t course-header">FOO-403</div>
+      <div class="black-t course-title">Advanced Foo Concepts</div>
+      <div class="professor icon-profile-male"></div>
+      <div class="professor-name">Dr. Who</div>
+    </div>
+
+  </div>
+  <div class="bottom-dash coldriver-b"></div>
+  <div><img class="avatar fadeinload user-dash-profile" ng-src="{{user.profilePicture}}"/></div>
+  <div class="avatar-shadow come-in fade" style="text-align: center; left: 45%;">
+    <div style="color: white; font-size: 20px; margin-top: 40px; font-weight: 200;">{{user.name}}</div>
+    <div style="color: white; font-size: 15px; font-style: italic;">{{user.usertype}}</div>
+  </div>
+</div>
+<div class="profile-builder-modal" ng-controller="profileBuilderCtrl" ng-hide="hideProfileBuilder">
+  <div class="row" style="text-align: center;">
+    <div class="row-container" style="text-align: center;">
+      <div class="usertype-select slush-b fade" ng-show="showUserType" style="display: inline-block;">
+        <div class="icon-profile-male placeholder-user"></div>
+        <div class="black-t usertype-name">{{user.name}}</div>
+        <div>Are you a student or instructor?</div>
+        <form ng-submit="submitUserType()" style="margin-top: 40px;">
+          <input checked name="usertype" ng-model="usertype" style="margin-right: 20px;" type='radio' value="Student">
+          <span style="font-size: 20px;">Student</span><br>
+          <input name="usertype" ng-model="usertype" style="margin-right: 20px" type='radio' value="Instructor">
+          <span style="font-size: 20px;">Instructor</span><br>
+          <button class="submit" style="margin-top: 20px;" type="submit">S U B M I T</button>
+        </form>
+        <div></div>
+      </div>
+      <div class="facebook-data-select slush-b fade" ng-show="showFacebookData">
+        <div class="facebook-data-title" style="font-size: 30px;">
+          Profile Filter
+        </div>
+        <form ng-submit="submitFacebookData()">
+        <div class="likes-background">
+        <div class="facebook-data-title">Likes</div>
+        <div class="like-container" ng-repeat="like in likesArray | limitTo: 5">
+          <img class="like-img" ng-src="{{like.image}}"/>
+          <span>{{like.name}}
+            <span><input class="like-check" type="checkbox" value="{{like}}" ng-model="like.selected"/>
+        </div>
+        </div>
+            <br>
+            <div class="img-background">
+            <div class="facebook-data-title">Images</div>
+              <div class="img-selector-container" ng-repeat="image in images | limitTo: 5"><img class="img-selector" ng-src="{{image.image}}"/><input class="img-check" type="checkbox" ng-model="image.selected" value={{image}}/>
+              </div>
+            </div>
+            <br>
+            <div class="education-background">
+            <div class="facebook-data-title">Education</div>
+            <div class="like-container" ng-repeat="school in schools | limitTo: 5">
+              <img class="like-img" ng-src="{{school.image}}"/>
+              <span>{{school.name}}
+                <span><input class="like-check" type="checkbox" value="{{school}}"/>
+                </div>
+              </div>
+              <br>
+                  <button class="submit bottom" style="" type="submit">S U B M I T</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>

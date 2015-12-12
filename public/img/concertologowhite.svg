@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg3393"
+   height="3000"
+   width="3000">
+  <metadata
+     id="metadata3406">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>clef</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3404">
+    <filter
+       id="filter3408"
+       style="color-interpolation-filters:sRGB;">
+      <feComposite
+         id="feComposite3410"
+         result="composite1"
+         k2="1"
+         k1="0"
+         operator="arithmetic"
+         in2="SourceGraphic" />
+      <feColorMatrix
+         id="feColorMatrix3412"
+         result="colormatrix1"
+         type="saturate"
+         values="1"
+         in="composite1" />
+      <feFlood
+         id="feFlood3414"
+         result="flood1"
+         flood-color="rgb(66,129,175)"
+         flood-opacity="1" />
+      <feBlend
+         id="feBlend3416"
+         result="blend1"
+         mode="multiply"
+         in2="colormatrix1"
+         in="flood1" />
+      <feBlend
+         id="feBlend3418"
+         result="blend2"
+         mode="screen"
+         in2="blend1" />
+      <feColorMatrix
+         id="feColorMatrix3420"
+         result="colormatrix2"
+         type="saturate"
+         values="1"
+         in="blend2" />
+      <feComposite
+         id="feComposite3422"
+         result="composite2"
+         k2="1"
+         operator="in"
+         in2="SourceGraphic"
+         in="colormatrix2" />
+    </filter>
+    <filter
+       id="filter3511"
+       style="color-interpolation-filters:sRGB;">
+      <feComposite
+         k4="-10"
+         k3="-10"
+         id="feComposite3513"
+         result="composite1"
+         k2="-10"
+         k1="-10"
+         operator="arithmetic"
+         in2="SourceGraphic" />
+      <feColorMatrix
+         id="feColorMatrix3515"
+         result="colormatrix1"
+         type="saturate"
+         values="1"
+         in="composite1" />
+      <feFlood
+         id="feFlood3517"
+         result="flood1"
+         flood-color="rgb(255,255,255)"
+         flood-opacity="1" />
+      <feBlend
+         id="feBlend3519"
+         result="blend1"
+         mode="multiply"
+         in2="colormatrix1"
+         in="flood1" />
+      <feBlend
+         id="feBlend3521"
+         result="blend2"
+         mode="screen"
+         in2="blend1" />
+      <feColorMatrix
+         id="feColorMatrix3523"
+         result="colormatrix2"
+         type="saturate"
+         values="1"
+         in="blend2" />
+      <feComposite
+         id="feComposite3525"
+         result="composite2"
+         k2="1"
+         operator="in"
+         in2="SourceGraphic"
+         in="colormatrix2" />
+    </filter>
+  </defs>
+  <title
+     id="title3395">clef</title>
+  <g
+     transform="matrix(1.2965178,0,0,1.2965178,262.95527,-28.735736)"
+     style="fill:#ffffff;filter:url(#filter3408)"
+     id="g3397">
+    <title
+       id="title3399">Layer 1</title>
+    <path
+       style="fill:#ffffff;fill-opacity:0;stroke:none;stroke-opacity:1;fill-rule:nonzero"
+       transform="matrix(0.99999988,-4.8401469e-4,4.8401469e-4,0.99999988,-0.72370084,0.45158518)"
+       d="M 955.64978,2286.2639 C 804.78351,2277.4951 650.75091,2182.8674 558.62848,2074.259 451.82266,1948.3353 407.78845,1777.13 419.06784,1636.5336 452.20322,1223.423 901.45148,979.25519 1067.7518,798.8053 c 111.3146,-120.78614 134.6502,-179.66754 159.5136,-241.789 48.1358,-120.24713 37.9345,-306.08623 -57.497,-316.60457 -149.1262,13.32309 -74.2649,247.54987 -88.3162,201.61963 -22.8244,-74.60693 -103.10102,-149.39069 -57.9386,-260.99584 32.7059,-63.85738 74.9544,-96.489948 172.2336,-111.617549 59.352,-9.229653 112.6131,3.78574 177.4703,51.468499 73.5394,111.37244 50.4485,188.82433 38.9736,326.30251 -11.75,140.76562 -107.0265,364.43925 -246.9942,534.37608 -54.1666,65.76334 -219.45758,210.63584 -314.22809,293.86784 -133.15966,116.9437 -229.74316,219.0822 -282.00164,342.2999 -58.72818,138.4823 -68.67038,312.8061 63.97674,467.4835 76.30261,87.3919 202.90302,149.4021 309.44977,150.7239 296.25692,3.6785 382.77132,-142.3569 385.53572,-307.7377 4.5508,-272.3183 -324.2072,-375.2762 -459.37007,-188.0344 -78.36932,108.571 -43.9234,222.8455 8.71063,277.2129 18.06616,18.6582 38.24646,32.871 57.33801,40.794 6.91877,2.8699 23.19318,10.439 18.57355,21.5179 -3.84271,9.2177 -11.30591,9.7361 -18.10315,8.9218 -85.23535,-10.2224 -179.61487,-91.6942 -202.82361,-231.8309 -33.81726,-204.2508 146.4264,-446.542 403.71274,-406.916 168.4411,25.9418 324.8312,170.8777 311.115,440.7651 -11.7604,231.3073 -203.5216,412.3654 -491.43272,395.631 z"
+       id="clef" />
+  </g>
+</svg>

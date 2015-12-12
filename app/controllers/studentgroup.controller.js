@@ -1,7 +1,9 @@
-var StudentGroup = require('../models/studentgroup.model.js');
+'use strict';
+let StudentGroup = require('../models/studentgroup.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addStudentGroup = (req, res) => {
-  var entry = new StudentGroup({
+  let entry = new StudentGroup({
     groupName: req.body.groupName,
     members: [],
     courseId: req.body.courseId,
@@ -10,7 +12,20 @@ exports.addStudentGroup = (req, res) => {
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

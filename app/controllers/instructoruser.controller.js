@@ -1,13 +1,28 @@
-var InstructorUser = require('../models/instructoruser.model.js');
+'use strict';
+let InstructorUser = require('../models/instructoruser.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addInstructorUser = (req, res) => {
-  var entry = new InstructorUser({
-    UID: req.body.uid
+  let entry = new InstructorUser({
+    UID: req.body.UID
   });
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

@@ -1,7 +1,9 @@
-var Session = require('../models/session.model.js');
+'use strict';
+let Session = require('../models/session.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addSession = (req, res) => {
-  var entry = new Session({
+  let entry = new Session({
     sectionId: req.body.sectionId,
     sessionDate: req.body.sessionDate || Date.now(),
     sessionNumber: req.body.sessionNumber
@@ -9,7 +11,20 @@ exports.addSession = (req, res) => {
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

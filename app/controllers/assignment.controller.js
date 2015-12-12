@@ -1,7 +1,9 @@
-var Assignment = require('../models/assignment.model.js');
+'use strict';
+let Assignment = require('../models/assignment.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addAssignment = (req, res) => {
-  var entry = new Assignment({
+  let entry = new Assignment({
     title: req.body.title,
     instructions: req.body.instructions,
     content: req.body.content,
@@ -10,7 +12,20 @@ exports.addAssignment = (req, res) => {
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

@@ -1,7 +1,9 @@
-var SessionMessage = require('../models/sessionMessage.model.js');
+'use strict';
+let SessionMessage = require('../models/sessionMessage.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addSessionMessage = (req, res) => {
-  var entry = new SessionMessage({
+  let entry = new SessionMessage({
     sessionId: req.body.sessionId,
     user: req.body.user,
     content: req.body.content,
@@ -9,7 +11,20 @@ exports.addSessionMessage = (req, res) => {
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

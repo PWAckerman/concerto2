@@ -1,0 +1,22 @@
+{
+  "name": "concerto",
+  "homepage": "https://github.com/PWAckerman/concerto2",
+  "authors": [
+    "patrickackerman <patrickackerman@gmail.com>"
+  ],
+  "description": "Facebook oriented LMS",
+  "main": "js/app.js",
+  "moduleType": [],
+  "keywords": [
+    "d"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

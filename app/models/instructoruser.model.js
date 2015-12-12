@@ -6,7 +6,7 @@ let ObjectId = mongoose.Schema.Types.ObjectId;
 let instructorUserSchema = new Schema({
   instructorId: ObjectId,
   courses: [],
-  UID: String
+  UID: Object
 })
 
 module.exports = mongoose.model('instructorUser', instructorUserSchema)

@@ -1,7 +1,9 @@
-var Course = require('../models/course.model.js');
+'use strict';
+let Course = require('../models/course.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addCourse = (req, res) => {
-  var entry = new Course({
+  let entry = new Course({
     title: req.body.title,
     description: req.body.description,
     students: [],
@@ -11,7 +13,20 @@ exports.addCourse = (req, res) => {
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

@@ -1,13 +1,28 @@
-var StudentUser = require('../models/studentuser.model.js');
+'use strict';
+let StudentUser = require('../models/studentuser.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addStudentUser = (req, res) => {
-  var entry = new StudentUser({
-    UID: req.body.uid
+  let entry = new StudentUser({
+    UID: req.body.UID
   });
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

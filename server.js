@@ -16,37 +16,87 @@ let express = require('express'),
     sessionMessageCtrl = require('./app/controllers/sessionmessage.controller.js'),
     sharedSessionSpaceCtrl = require('./app/controllers/sharedsessionspace.controller.js'),
     studentGroupCtrl = require('./app/controllers/studentgroup.controller.js'),
-    auth = require('./app/middleware/auth'),
+    logCtrl = require('./app/controllers/log.controller.js'),
+    facebookCtrl = require('./app/controllers/facebook.controller.js'),
     FacebookStrategy = require('passport-facebook').Strategy,
     FacebookConfig = require('./config/config.js').FACEBOOK_CONF,
+    graph = require('fbgraph'),
     passport = require('passport'),
+    methodOverride = require('method-override'),
     logger = require('morgan'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
     session = require("express-session"),
     cookieParser = require('cookie-parser'),
+    requestify = require('requestify'),
+    errorHandler = require('errorhandler'),
+    server = require('http').Server(concerto),
+    io = require('socket.io')(server),
+    User = require('./app/models/user.model.js'),
+    UserEducation = require('./app/models/usereducation.model.js'),
+    UserFriends = require('./app/models/userfriends.model.js'),
+    UserLikes = require('./app/models/userlikes.model.js'),
+    UserPhotos = require('./app/models/userphotos.model.js'),
     port = 3030,
+    sockets = {},
     env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+if(env === 'development'){
+  concerto.use(errorHandler())
+}
+let auth = function(req, res, next){
+      if(!req.isAuthenticated()){
+        console.log('Some jerk is trying to access unauthorized endpoints');
+        res.status('401')
+      } else {
+        next();
+      }
+    }
 
+graph.setAppSecret(FacebookConfig.app_secret);
+server.listen(port)
+console.log(`${env} mode`)
 concerto
-  // .set('views', __dirname + '/app/views')
-  // .use(express.static(__dirname + '/public'))
+  .set('views', __dirname + '/app/views')
+  .use(express.static(__dirname + '/public'))
+
   .use(logger('dev'))
   // .get('*', function(req, res){
   //
   // })
   .use(bodyParser.json())
+  .use(bodyParser.urlencoded())
   .use(cookieParser())
   .use(cors())
   .use(session({secret: 'anything'}))
   .get('/',
     (req, res)=> {
-      // res.render('index')
-      console.log('Working...');
-      res.json('Working...')
+      res.render('index')
+      // console.log('Working...');
+      // res.json('Working...')
     }
   )
-  .get('/users',
+  .get('/logout', (req, res) => {
+    req.logout()
+    logCtrl.addLog({
+      status: "User has logged out",
+      content: ''
+    })
+    console.log('log out...')
+    io.on('connection', function (socket) {
+      io.to(socket.id).emit('loggedOut', {message: 'User has logged out'});
+      socket.on('disconnect', function(){
+        console.log('Mr. Gorbachev, TEAR DOWN THIS SOCKET');
+        // socket.destroy()
+      })
+    });
+    res.redirect('/')
+  })
+  .get('/logmein', (req, res) => {
+    requestify.get('http://localhost:3030/auth/facebook/callback').then(function(response){
+      console.log(response.getBody())
+    })
+  })
+  .get('/users', auth,
     (req, res) => {
       return userCtrl.getUsers(req, res);
     }
@@ -54,6 +104,16 @@ concerto
   .get('/users/:id',
     (req, res) => {
       return userCtrl.getUser(req, res);
+    }
+  )
+  .patch('/users/:id',
+    (req, res) => {
+      return userCtrl.updateUser(req, res);
+    }
+  )
+  .get('/fbid/:fbId',
+    (req, res) => {
+      return userCtrl.getUserByFacebookId(req, res)
     }
   )
   .get('/studentusers',
@@ -68,9 +128,19 @@ concerto
   )
   .post('/studentusers',
     (req, res) => {
+      console.log(req.body)
       return studentUserCtrl.addStudentUser(req, res);
     }
   )
+  .post('/fb/likes/', (req, res) => {
+     return facebookCtrl.addLike(req, res);
+  })
+  .post('/fb/images/', (req, res) => {
+     return facebookCtrl.addImage(req, res);
+  })
+  .post('/fb/school/', (req, res) => {
+     return facebookCtrl.addSchool(req, res);
+  })
   .get('/instructorusers',
     (req, res) => {
       return instructorUserCtrl.getInstructorUsers(req, res);
@@ -83,6 +153,7 @@ concerto
   )
   .post('/instructorusers',
     (req, res) => {
+      console.log(req.body)
       return instructorUserCtrl.addInstructorUser(req, res);
     }
   )
@@ -176,6 +247,23 @@ concerto
       return sectionCtrl.getSections(req, res);
     }
   )
+  .get('/photos/images/:id', (req, res) => {
+    graph.get(req.params.id + '?fields=images', (err, response) => {
+      res.json(response.images)
+    })
+  })
+  .get('/likes/data/:id', (req, res) => {
+    graph.get(req.params.id + '/picture?type=large', (err, response) => {
+      console.log(response)
+      res.json(response)
+    })
+  })
+  .get('/education/data/:id', (req, res) => {
+    graph.get(req.params.id + '/picture?type=large', (err, response) => {
+      console.log(response)
+      res.json(response)
+    })
+  })
   .get('/sections/:id',
     (req, res) => {
       return sectionCtrl.getSections(req, res);
@@ -194,6 +282,21 @@ concerto
   .get('/sessions/:id',
     (req, res) => {
       return sessionCtrl.getSession(req, res);
+    }
+  )
+  .get('/likes/:id',
+    (req, res) => {
+      return facebookCtrl.getLikes(req, res);
+    }
+  )
+  .get('/education/:id',
+    (req, res) => {
+      return facebookCtrl.getEducation(req, res);
+    }
+  )
+  .get('/photos/:id',
+    (req, res) => {
+      return facebookCtrl.getPhotos(req, res);
     }
   )
   .post('/sessions',
@@ -273,38 +376,137 @@ concerto
   )
   .use(passport.initialize())
   .use(passport.session())
-  .listen(port)
+  // .listen(port)
 
 passport.use('facebook',
   new FacebookStrategy(
     {
       clientID: FacebookConfig.clientID,
       clientSecret: FacebookConfig.clientSecret,
-      callbackURL: FacebookConfig.callbackURL
+      callbackURL: FacebookConfig.callbackURL,
+      profileFields: ['id', 'displayName', 'photos', 'emails', 'gender', 'profileUrl']
     },
     (accessToken, refreshToken, profile, done) => {
+
+      graph.setAccessToken(accessToken)
+      User.findOrCreate({ fbId: profile.id},
+          {
+            name: profile.displayName,
+            status: 'Active',
+            usertype: '',
+            gender: profile.gender,
+            fbId: profile.id,
+            profilePicture: '',
+            internalId: Math.floor(Math.random() * 100000),
+            currentToken: accessToken
+          }, function (err, user, created) {
+                if(created === false){
+                  console.log('User exists, updating their token')
+                  User.findOneAndUpdate({ fbId: profile.id}, {
+                    $set: {currentToken: accessToken}, $inc: { logins: 1} }, { new: true }, function(err, doc){
+                      user = doc;
+                      io.on('connection', function (socket) {
+                        console.log('I am the user in Socket IO', user);
+                        sockets[profile.id] = socket.id;
+                        console.log(sockets)
+                        io.to(sockets[profile.id]).emit('userEmitted', user);
+                        console.log('USER EMITTED', Date.now())
+                        socket.on('disconnect', function(){
+                          // socket.destroy()
+                        })
+                      });
+                      return done(err, user, created);
+                  })
+                } else {
+                  graph.batch([{
+                    method: 'GET',
+                    relative_url: `me/friends?limit=100`
+                  },{
+                    method: 'GET',
+                    relative_url: `me/photos?limit=5`
+                  },{
+                    method: 'GET',
+                    relative_url: `me/likes`
+                  },{
+                    method: 'GET',
+                    relative_url: `me?fields=education`
+                  },{
+                    method: 'GET',
+                    relative_url: `${user.fbId}/picture?type=large`
+                  }], (err, res) => {
+                    let education = new UserEducation({
+                      user: user._id,
+                      content: JSON.parse(res[3].body).education
+                    })
+                    let friends = new UserFriends({
+                      user: user._id,
+                      content: JSON.parse(res[0].body).data
+                    })
+                    let likes = new UserLikes({
+                      user: user._id,
+                      content: JSON.parse(res[2].body).data
+                    })
+                    let photos = new UserPhotos({
+                      user: user._id,
+                      content: JSON.parse(res[1].body).data
+                    })
+                    education.save((err, doc) => {
+                      console.log('Education', doc)
+                    })
+                    friends.save((err, doc) => {
+                      console.log('Friends', doc)
+                    })
+                    likes.save((err, doc) => {
+                      console.log('Likes', doc)
+                    })
+                    photos.save( (err, doc) => {
+                      console.log('Photos', doc)
+                    })
+                    // console.log(JSON.parse(res[4]))
+                    User.findOneAndUpdate({ _id: user._id}, {
+                      $set: { profilePicture: res[4].headers[3].value }
+                    }, { new: true }, function(err, doc){
+                      console.log(doc)
+                        user = doc;
+                      })
+
+                    console.log('THE HEADERS THEY BURN', res[4].headers[3].value)
+                  })
+                  io.on('connection', function (socket) {
+                    console.log('I am the user in Socket IO', user);
+                    sockets[profile.id] = socket.id;
+                    console.log(sockets)
+                    io.to(sockets[profile.id]).emit('userEmitted', user);
+                    console.log('USER EMITTED', Date.now())
+                    socket.on('disconnect', function(){
+                      // socket.destroy()
+                    })
+                  })
+                    return done(err, user, created);
+                };
+        });
       process.nextTick(function () {
-        return done(null, profile);
-      });
-    })
+
+      })
+    }
+  )
 );
 
 passport.serializeUser(
-  (user, done) => done(null, user)
+  (user, done) => {
+    done(null, user);
+  }
 );
 passport.deserializeUser(
-  (user, done) => done(null, user)
+  (user, done) => {
+    done(null, user);
+  }
 );
 
-require("./config/strategies/facebook.strategy")
+// require("./config/strategies/facebook.strategy")
 // require('./config/passport')(concerto);
 concerto
-  .get('/auth/facebook', passport.authenticate('facebook'),
-    (req, res) => console.log("I'm inconsequential!")
-  )
-  .get('/auth/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/login'}),
-    (req, res) => res.redirect('/')
-  )
+  .get('/auth/facebook', passport.authenticate('facebook', { scope: ['user_status', 'user_likes', 'user_posts', 'user_friends', 'email', 'user_education_history'] }))
+  .get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/#/login' }))
 console.log('Listening on port ' + port + '...');
 require('./config/db.js');

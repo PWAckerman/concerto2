@@ -1,7 +1,9 @@
-var GroupMessage = require('../models/groupMessage.model.js');
+'use strict';
+let GroupMessage = require('../models/groupMessage.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addGroupMessage = (req, res) => {
-  var entry = new GroupMessage({
+  let entry = new GroupMessage({
     groupChatId: req.body.groupChatId,
     content: req.body.content,
     user: req.body.user,
@@ -9,7 +11,20 @@ exports.addGroupMessage = (req, res) => {
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }

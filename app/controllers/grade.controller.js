@@ -1,7 +1,9 @@
-var Grade = require('../models/grade.model.js');
+'use strict';
+let Grade = require('../models/grade.model.js');
+let Log = require('../controllers/log.controller.js');
 
 exports.addGrade = (req, res) => {
-  var entry = new Grade({
+  let entry = new Grade({
     studentId: req.body.studentId,
     value: req.body.value,
     assignmentId: req.body.assignmentId
@@ -9,7 +11,20 @@ exports.addGrade = (req, res) => {
 
   entry.save(
       (err, entry) => {
-        err ? console.log(err) : res.json(entry)
+        if(err){
+          Log.addLog({
+            status: "Database Error",
+            content: err
+          })
+          console.log(err)
+          res.json(err)
+        } else {
+          Log.addLog({
+            status: "Successful Database Addition",
+            content: entry
+          })
+          res.json(entry)
+        }
       }
   );
 }
