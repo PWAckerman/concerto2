@@ -1,0 +1,28 @@
+<div class="top-spacer"></div>
+<div class="session-tools">
+  <div class="inline-block session-tool">
+    <div class="icon-clipboard white-t big-icon inline-block"></div>
+    <div style="font-size: 10px" class="white-t">ASSIGNMENT</div>
+  </div>
+  <div class="inline-block session-tool">
+    <div class="icon-presentation white-t big-icon inline-block"></div>
+    <div style="font-size: 10px" class="white-t">PRESENTATION</div>
+  </div>
+  <div class="inline-block session-activate white-t {{button}}" ng-hide="user.usertype === 'Student'" ng-click="toggleActive()">
+    {{button}} SESSION
+  </div>
+  <div ng-hide="userHasJoined"><div class="inline-block session-activate white-t" ng-show="user.usertype === 'Student'" ng-click="joinSession()" style="float: right;">
+    JOIN
+  </div></div>
+  <div class="inline-block session-activate white-t EXIT" ng-show="userHasJoined" ng-click="leaveSession()" style="float: right;">
+    EXIT
+  </div>
+  <div ng-click="testSocket()" class="inline-block session-activate white-t">TEST THE SOCKET</div>
+</div>
+<div class="session-presentation-space">
+  <video id="video" class="web-video" ng-hide="user.usertype === 'Student'"></video>
+  <video id="returnVideo" class="web-video"></video>
+</div>
+<div class="session-attendance-container fade">
+  <img class="session-user fade" src="{{user.UID.profilePicture}}" ng-repeat="user in thisSession.joined"/>
+</div>

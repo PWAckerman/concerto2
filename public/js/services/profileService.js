@@ -17,6 +17,22 @@ angular.module('concerto').service('profileService', ['$http', function($http){
       }
     })
   }
+  this.requestEnrollment = function(sectionId, data){
+    console.log(sectionId)
+    console.log(data)
+    return $http({
+      method: 'POST',
+      url: '/section/enrollment/' + sectionId,
+      data: data
+    })
+  }
+  this.getStudentUser = function(userId){
+    console.log(userId)
+    return $http({
+      method: 'GET',
+      url: '/studentusers/' + userId
+    })
+  }
   this.addStudent = function(userId){
     console.log(userId)
     return $http({

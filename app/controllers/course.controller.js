@@ -6,11 +6,10 @@ exports.addCourse = (req, res) => {
   let entry = new Course({
     title: req.body.title,
     description: req.body.description,
-    students: [],
     courseNumber: req.body.courseNumber,
     topicIdentifier: req.body.topicIdentifier,
   });
-
+  console.log(`NEW COURSE IS ${entry}`)
   entry.save(
       (err, entry) => {
         if(err){

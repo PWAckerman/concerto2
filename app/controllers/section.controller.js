@@ -33,14 +33,21 @@ exports.addSection = (req, res) => {
       }
   );
 }
-
+exports.requestSection = (req, res) => {
+  Section.findByIdAndUpdate(req.params.id, {$addToSet: {"prospectiveStudents": req.body.studentId}}, {new: true}).exec((err, sectionDoc) => res.json(sectionDoc));
+}
+exports.approveStudent = (req, res) => {
+  Section.findByIdAndUpdate(req.params.id, {$pull: {"prospectiveStudents": req.body.studentId}, $addToSet: {"students": req.body.studentId}}, {new: true}).exec((err, sectionDoc) => res.json(sectionDoc));
+}
+exports.denyStudent = (req, res) => {
+  console.log(req.body)
+  Section.findByIdAndUpdate(req.params.id, {$pull: {"prospectiveStudents": req.body.studentId}}, {new: true}).exec((err, sectionDoc) => res.json(sectionDoc))
+}
 exports.getSections = (req, res) => {
-  Section.find().exec((err, sectionDoc) => res.json(sectionDoc));
+  Section.find().deepPopulate(['courseId', 'instructor', 'instructor.UID']).exec((err, sectionDoc) => res.json(sectionDoc));
 }
 
 exports.getSection = (req, res) => {
   console.log(req.params.id);
-  Section.findById(req.params.id, (err, doc)=> {
-    res.json(doc);
-  })
+  Section.findById(req.params.id).deepPopulate(['students', 'students.UID', 'prospectiveStudents', 'prospectiveStudents.UID']).exec((err, sectionDoc) => res.json(sectionDoc))
 }

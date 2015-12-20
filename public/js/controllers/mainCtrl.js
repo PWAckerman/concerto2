@@ -1,8 +1,28 @@
 angular.module('concerto').controller('mainCtrl', ['$scope', 'authService', 'socket', '$timeout', '$state', function($scope, authService, socket, $timeout, $state){
   // socket.forward('userEmitted', $scope)
   // socket.forward('loggedOut', $scope)
+  //wavething
+
+  //wave thing
   $scope.getUser = function(){
-    authService.getUser();
+    authService.getAuthedUser().then(function(response){
+      if(response){
+        $scope.user = response;
+        $scope.$emit('loggedIn')
+      }
+    });
+  }
+  $scope.getUser();
+  $scope.getSubMenu = function(course){
+    $scope.selectedCourse = course;
+    $scope.days = ['M','T','W','R','F'].map(function(day){
+      return $scope.selectedCourse.scheduleDays.indexOf(day) < 0 ? false : true
+    })
+    console.log($scope.days)
+  }
+  $scope.goToCourseSection = function(id, course){
+    $scope.selectedCourse = course;
+    $state.go('auth.section', {id: id})
   }
   $scope.connectionOpen = 0
   $scope.showMenu = false;
@@ -23,8 +43,8 @@ angular.module('concerto').controller('mainCtrl', ['$scope', 'authService', 'soc
   //     }, 5000)
   //   }
   // })
-  $scope.$on('loggedIn', function(){
-    $scope.user = authService.getUser();
+  $scope.$on('loggedIn', function(ev){
+    // $scope.user = authService.getUser().then(function(response){ return response});
     $scope.showMenu = true;
     $scope.toast.good = 'You logged in!';
     $scope.toast.bad = '';
@@ -63,7 +83,19 @@ angular.module('concerto').controller('mainCtrl', ['$scope', 'authService', 'soc
     }, 5000)
     $state.go('login')
   })
-  $scope.$on('$destroy', function(){
-    socket.disconnect()
+  // $scope.$on('$destroy', function(){
+  //   socket.disconnect()
+  // })
+  $scope.$on('$locationChangeStart', function(event) {
+    $scope.hideLoading = false;
+    $timeout(function(){
+      $scope.hideLoading = true;
+    }, 4000)
+  });
+  $scope.hideLoading = true;
+  $scope.$on('StudentLoaded', function(ev, student){
+    $scope.navInfo = student;
+
   })
+  $scope.days = [true, false, true, false, true]
 }])

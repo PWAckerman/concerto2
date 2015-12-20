@@ -1,22 +1,32 @@
 <div class="row" style="padding-top: 50px; padding-bottom: 150px;">
   <div class="row-container">
-    <div class="course slush-b white-t fadeinload" style="display: inline-block;">
-      <div class="black-t course-header">FOO-101</div>
-      <div class="black-t course-title">Introduction to Foo</div>
-      <div class="professor icon-profile-male"></div>
-      <div class="professor-name">Dr. Oberon</div>
+    <div class="course slush-b white-t fadeinload" ng-hide="isStudent" style="display: inline-block;">
+      <div class="add-group-button" ng-click="hideSectionModal()">
+        <span class="top-space">+</span>
+      </div>
+      <div class="black-t course-header">
+        <input ng-model="newCourse.topicIdentifier" placeholder="NEW" style="background: transparent; outline: none; border: none; text-align: center; width: 60px; margin-left: -10px;" type="text"/>
+        <input ng-model="newCourse.courseNumber" placeholder="COR#" style="background: transparent; outline: none; border: none; text-align: center; width: 60px;" type="text"/>
+        <input / ng-model="newSection.sectionNumber" placeholder="SEC#" style="background: transparent; outline: none; border: none; text-align: center; width: 60px;" type="text"></div>
+      <input class="black-t course-title" ng-model="newCourse.title" placeholder="New Course Title" style="background: transparent; outline: none; border: none; text-align: center; display: inline-block; left: 0px;" type="text"/>
+      <div><img class="professor-img" ng-src="{{user.profilePicture}}"/></div>
+      <div class="professor-name">Prof.
+        {{user.name.split(' ')[user.name.split(' ').length - 1]}}</div>
     </div>
-    <div class="course slush-b white-t fadeinload" style="display: inline-block;">
-      <div class="black-t course-header">BAR-201</div>
-      <div class="black-t course-title">Cognitive Factors of Bar and Bar-Like Composites</div>
-      <div class="professor icon-profile-male"></div>
-      <div class="professor-name">Dr. Bob</div>
+    <div class="course slush-b white-t fadeinload" style="display: inline-block;" ng-show="isStudent">
+      <div class="add-group-button" ng-click="hideEnrollmentModal()">
+        <span class="top-space">+</span>
+      </div>
+      <div class="black-t course-header">
+        ENROLL IN A COURSE
+      </div>
     </div>
-    <div class="course slush-b white-t fadeinload" style="display: inline-block;">
-      <div class="black-t course-header">FOO-403</div>
-      <div class="black-t course-title">Advanced Foo Concepts</div>
-      <div class="professor icon-profile-male"></div>
-      <div class="professor-name">Dr. Who</div>
+    <div class="course slush-b white-t fadeinload" ng-click="goToCourseSection(course._id, course)" ng-repeat="course in userInfo.courses" style="display: inline-block;">
+      <div class="black-t course-header">{{course.courseId.topicIdentifier}}-{{course.courseId.courseNumber}}</div>
+      <div class="black-t course-title">{{course.courseId.title}}</div>
+      <div><img class="professor-img" ng-src="{{course.instructor.UID.profilePicture}}"/></div>
+      <div class="professor-name">Prof.
+        {{course.instructor.UID.name.split(' ')[course.instructor.UID.name.split(' ').length - 1]}}</div>
     </div>
 
   </div>
@@ -48,32 +58,81 @@
           Profile Filter
         </div>
         <form ng-submit="submitFacebookData()">
-        <div class="likes-background">
-        <div class="facebook-data-title">Likes</div>
-        <div class="like-container" ng-repeat="like in likesArray | limitTo: 5">
-          <img class="like-img" ng-src="{{like.image}}"/>
-          <span>{{like.name}}
-            <span><input class="like-check" type="checkbox" value="{{like}}" ng-model="like.selected"/>
-        </div>
-        </div>
-            <br>
-            <div class="img-background">
-            <div class="facebook-data-title">Images</div>
-              <div class="img-selector-container" ng-repeat="image in images | limitTo: 5"><img class="img-selector" ng-src="{{image.image}}"/><input class="img-check" type="checkbox" ng-model="image.selected" value={{image}}/>
-              </div>
-            </div>
-            <br>
-            <div class="education-background">
-            <div class="facebook-data-title">Education</div>
-            <div class="like-container" ng-repeat="school in schools | limitTo: 5">
-              <img class="like-img" ng-src="{{school.image}}"/>
-              <span>{{school.name}}
-                <span><input class="like-check" type="checkbox" value="{{school}}"/>
+          <div class="likes-background">
+            <div class="facebook-data-title">Likes</div>
+            <div class="like-container" ng-repeat="like in likesArray | limitTo: 5">
+              <img class="like-img" ng-src="{{like.image}}"/>
+              <span>{{like.name}}
+                <span><input class="like-check" ng-model="like.selected" type="checkbox" value="{{like}}"/>
                 </div>
               </div>
               <br>
+              <div class="img-background">
+                <div class="facebook-data-title">Images</div>
+                <div class="img-selector-container" ng-repeat="image in images | limitTo: 5"><img class="img-selector" ng-src="{{image.image}}"/><input class="img-check" ng-model="image.selected" type="checkbox" value={{image}}/>
+                </div>
+              </div>
+              <br>
+              <div class="education-background">
+                <div class="facebook-data-title">Education</div>
+                <div class="like-container" ng-repeat="school in schools | limitTo: 5">
+                  <img class="like-img" ng-src="{{school.image}}"/>
+                  <span>{{school.name}}
+                    <span><input class="like-check" type="checkbox" value="{{school}}"/>
+                    </div>
+                  </div>
+                  <br>
                   <button class="submit bottom" style="" type="submit">S U B M I T</button>
                 </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section-builder-modal fade" ng-show="showSectionModal">
+          <div class="section-builder-box slush-b come-in">
+            <div class="action-close coldriver-t" ng-click="hideSectionModal()">x</div>
+            <div class="section-modal-title" ng-cloak>{{newCourse.topicIdentifier}}-{{newCourse.courseNumber}}-{{newSection.sectionNumber}}</div>
+            <div class="section-modal-title" ng-cloak style="font-size: 20px; margin-top: -10px;">{{newCourse.title}}</div>
+            <div class="section-modal-title" style="margin-left: 60px;">
+              <div class="schedule">
+                <div class="schedule-day" ng-class="{'lakeice-b white-t scheduled': newSection.days[0],'white-b not-scheduled': !newSection.days[0]}" ng-click="selectDay(0)">M</div>
+                <div class="schedule-day" ng-class="{'lakeice-b white-t scheduled': newSection.days[1],'white-b not-scheduled': !newSection.days[1]}" ng-click="selectDay(1)">T</div>
+                <div class="schedule-day" ng-class="{'lakeice-b white-t scheduled': newSection.days[2],'white-b not-scheduled': !newSection.days[2]}" ng-click="selectDay(2)">W</div>
+                <div class="schedule-day" ng-class="{'lakeice-b white-t scheduled': newSection.days[3],'white-b not-scheduled': !newSection.days[3]}" ng-click="selectDay(3)">R</div>
+                <div class="schedule-day" ng-class="{'lakeice-b white-t scheduled': newSection.days[4],'white-b not-scheduled': !newSection.days[4]}" ng-click="selectDay(4)">F</div>
+              </div>
+            </div>
+            <div class="section-modal-datetime" style="width: 100%; font-size: 20px; margin-top: 10px;">START DATE</div>
+            <datepicker>
+              <input ng-change="countCertainDays(dayIndex, newSection.startDate, newSection.endDate)" ng-model="newSection.startDate" placeholder="Select Start Date" readonly style="width: 100%; margin-left: -5px; background: transparent; text-align: center; font-family: 'Dosis', sans-serif; border: none; outline: none; margin-top: 5px;" type="text"/>
+            </datepicker>
+            <div class="section-modal-datetime" style="width: 100%; font-size: 20px; margin-top: 10px;">END DATE</div>
+            <datepicker>
+              <input ng-change="countCertainDays(dayIndex, newSection.startDate, newSection.endDate)" ng-model="newSection.endDate" placeholder="Select End Date" readonly style="width: 100%; margin-left: -5px; background: transparent; text-align: center; font-family: 'Dosis', sans-serif; border: none; outline: none; margin-top: 5px;" type="text"/>
+            </datepicker>
+            <input ng-model="newSection.scheduleTime" placeholder="Time of Day" style="width: 100%; margin-left: -5px; background: transparent; text-align: center; font-family: 'Dosis', sans-serif; border: none; outline: none; margin-top: 5px;" type="text"/>
+            <div class="submit-course" ng-click="submitCourseAndSections(newCourse)">S U B M I T</div>
+            <div class="section-modal-instructor">
+              # of Sessions:
+              <div ng-model="sessionCount">{{sessionCount}}</div>
+            </div>
+            <div class="section-modal-instructor">
+              <div><img class="professor-img-section" ng-src="{{user.profilePicture}}"/></div>
+              <div class="professor-name-section" ng-cloak>Prof.
+                {{user.name.split(' ')[user.name.split(' ').length - 1]}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="enrollment-modal fade" ng-hide="hideEnrollment">
+          <div class="enrollment-modal-box slush-b black-t come-in">
+            <div class="action-close coldriver-t" ng-click="hideEnrollmentModal()">x</div>
+            <div class="enrollment-course-container">
+              <div ng-repeat="course in availableCourses">
+                <div style="width: 100%; position: relative; overflow: hidden;"><img ng-src="{{course.instructor.UID.profilePicture}}" style="width: 50px; height: 50px; border-radius: 25px; position: absolute; left: 10px;"/>
+                  <div style="height: 50px; position: relative; text-align: left; left: 70px;">{{course.courseId.title}}<br>{{course.courseId.topicIdentifier}}-{{course.courseId.courseNumber}}-{{course.sectionNumber}}
+                    <div style="background-color: rgb(42, 207, 78); color: white; position: absolute; top: 0px; left: 180px; width: 20px; height: 20px; border-radius: 10px; padding-top: -5px; cursor: pointer;" ng-click="addToRequestedCourses(course._id)" ng-class="{'selected-course-button': (requestedToggle['{{course._id}}'])}">&nbsp;&nbsp;+</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

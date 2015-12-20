@@ -1,0 +1,32 @@
+{
+  "name": "ez-timepicker",
+  "version": "0.0.2",
+  "main": [
+    "dist/ez-timepicker.min.js",
+    "dist/ez-timepicker.min.css"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "~2.0.3",
+    "angular": "~1.2.0-rc.2",
+    "angular-bootstrap": "latest",
+    "angular-mocks": "~1.2.0-rc.2"
+  },
+  "homepage": "https://github.com/jdewit/easy-timepicker",
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.2",
+    "commit": "f626af78ffed951e2f72a4d9dca55cd5a4883c72"
+  },
+  "_source": "git://github.com/jdewit/easy-timepicker.git",
+  "_target": "~0.0.2",
+  "_originalSource": "ez-timepicker",
+  "_direct": true
+}

@@ -1,5 +1,6 @@
 'use strict';
 let StudentUser = require('../models/studentuser.model.js');
+let Section = require('../models/section.model.js');
 let Log = require('../controllers/log.controller.js');
 
 exports.addStudentUser = (req, res) => {
@@ -33,7 +34,14 @@ exports.getStudentUsers = (req, res) => {
 
 exports.getStudentUser = (req, res) => {
   console.log(req.params.id);
-  StudentUser.findById(req.params.id, (err, doc)=> {
-    res.json(doc);
+  StudentUser.findOne({UID: req.params.id}).deepPopulate(['courses', 'courses.instructor','courses.courseId','courses.instructor.UID']).exec((err, doc)=> {
+      res.json(doc)
+  })
+}
+
+exports.updateStudentUser = (req, res) => {
+  console.log('STUDENT USER ADDING THIS COURSE TO THE ARRAY', req.body)
+  StudentUser.findByIdAndUpdate(req.params.id, {$addToSet: {courses: req.body.courseId}}, {new: true}).exec((err, doc) => {
+    res.json(doc)
   })
 }

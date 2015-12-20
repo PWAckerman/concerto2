@@ -1,0 +1,49 @@
+<div class="sessions-container">
+  <div ng-repeat="session in sessions"><a href="/#/session/{{session._id}}"><div class="session-box">Session {{session.sessionNumber}}</div></a></div>
+</div>
+<div class="pros-students-container">
+  <div style="position: relative;" ng-repeat="student in prospectiveStudents">
+  <div class="pros-student-box blueice-b">
+    <img class="pros-student-img" ng-src="{{student.UID.profilePicture}}"/>
+    <div class="white-t inline-block" style="font-size: 12px; line-height: 30px; margin-top: -10px;">{{student.UID.name}}</div>
+  </div>
+  <div class="approve-student" ng-click="approveStudent(newGroup.sectionId, student._id)"></div>
+  <div class="deny-student" ng-click="denyStudent(newGroup.sectionId, student._id)"></div>
+</div>
+</div>
+<div class="row-container" style="margin-top: 100px;">
+  <div class="row">
+    <div class="group-add-circle come-in" ng-hide="user.usertype === 'Student'">
+      <div class="add-group-button" ng-click="addSectionGroup()"><span class="top-space">+</span></div>
+      <input class="group-title-input" ng-model="newGroup.groupName" placeholder="NEW GROUP NAME" type="text"/>
+      <div class="group-user-row">
+        <div class="group-user-container" ng-repeat="member in newGroup.members" ng-click="removeStudent(member)"><div class="subtract-user">-</div><img class="group-user fadeinload fade" ng-src="{{member.UID.profilePicture}}" /></div>
+        <div class="group-user fadeinload icon-happy" style="padding-top: 5px;" ng-click="hideGroupModal()"/><span class="bottom-text">ADD USER</span></div><br>
+
+    </div>
+  </div>
+    <div class="group-circle come-in" ng-repeat="group in groups">
+      <div class="group-title">{{group.groupName}}</div>
+      <div class="group-user-row">
+        <img class="group-user fadeinload" ng-repeat="member in group.members" ng-src="{{member.UID.profilePicture}}"/>
+      </div>
+    </div>
+
+</div>
+</div>
+<div class="bottom-dash coldriver-b"></div>
+<div><img class="avatar fadeinload user-dash-profile" ng-src="{{selectedCourse.instructor.UID.profilePicture}}"/></div>
+<div class="avatar-shadow come-in fade" style="text-align: center; left: 45%;">
+<div style="color: white; font-size: 20px; margin-top: 20px; font-weight: 200;">{{selectedCourse.courseId.topicIdentifier}}-{{selectedCourse.courseId.courseNumber}}-{{selectedCourse.sectionNumber}}</div>
+<div style="color: white; font-size: 20px; font-weight: 200; height: 25px; overflow: hidden;">{{selectedCourse.courseId.title}}</div>
+<div style="color: white; font-size: 15px; font-style: italic;">Prof.
+  {{selectedCourse.instructor.UID.name.split(' ')[selectedCourse.instructor.UID.name.split(' ').length - 1]}}</div>
+</div>
+<div class="group-user-modal fade" ng-show="showGroupModal"></div>
+<div class="add-student-modal-container fade" ng-show="showGroupModal">
+<div class="add-student-modal come-in slush-b" ng-show="showGroupModal">
+  <div class="icon-close action-close coldriver-t" ng-click="hideGroupModal()">x</div>
+  <div class="student-modal-row" style="height: 20px;"></div>
+  <div ng-repeat="student in students" class="student-modal-row" ng-click="addStudentToGroup(student)"><img class="student-user" ng-src="{{student.UID.profilePicture}}"/><div><span class="student-modal-name">{{student.UID.name}}<span><div></div>
+</div>
+</div>

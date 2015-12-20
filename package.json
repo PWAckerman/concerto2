@@ -2,7 +2,7 @@
   "name": "concerto2",
   "version": "1.0.0",
   "description": "Learning Management System prototype",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/PWAckerman/concerto2#readme",
   "dependencies": {
+    "angularjs-datepicker": "^0.2.16",
     "body-parser": "^1.14.1",
     "cookie-parser": "^1.4.0",
     "cors": "^2.7.1",
@@ -33,10 +34,12 @@
     "jade": "^1.11.0",
     "method-override": "^2.3.5",
     "mongoose": "^4.2.7",
+    "mongoose-deep-populate": "^2.0.3",
     "mongoose-findorcreate": "^0.1.2",
     "morgan": "^1.6.1",
     "passport": "^0.3.2",
     "passport-facebook": "^2.0.0",
-    "requestify": "^0.1.17"
+    "requestify": "^0.1.17",
+    "signal-master": "^1.0.0"
   }
 }

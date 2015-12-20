@@ -27,6 +27,14 @@ exports.addSessionChat = (req, res) => {
   );
 }
 
+exports.startSessionChat = (req, res) => {
+  let entry = new SessionChat({
+    sessionId: req.params.id
+  })
+
+  return entry.save()
+}
+
 exports.getSessionChats = (req, res) => {
   SessionChat.find().exec((err, sessionChatDoc) => res.json(sessionChatDoc));
 }

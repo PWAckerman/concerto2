@@ -33,7 +33,19 @@ exports.getInstructorUsers = (req, res) => {
 
 exports.getInstructorUser = (req, res) => {
   console.log(req.params.id);
-  InstructorUser.findById(req.params.id, (err, doc)=> {
+  InstructorUser.findById(req.params.id).deepPopulate(['courses', 'courses.instructor','courses.courseId','courses.instructor.UID']).exec((err, doc)=> {
+    res.json(doc);
+  })
+}
+exports.findInstructorUser = (req, res) => {
+  InstructorUser.find({UID: req.params.id}).deepPopulate(['courses', 'courses.instructor','courses.courseId','courses.instructor.UID']).exec((err, doc)=> {
+    res.json(doc[0]);
+  })
+}
+
+exports.updateInstructorUser = (req, res) => {
+  console.log(req.params.id);
+  InstructorUser.findByIdAndUpdate(req.params.id, { $addToSet: {courses: req.body._id}}, {new: true}).populate('courses').exec((err, doc)=> {
     res.json(doc);
   })
 }

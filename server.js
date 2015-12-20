@@ -40,6 +40,7 @@ let express = require('express'),
     port = 3030,
     sockets = {},
     env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 if(env === 'development'){
   concerto.use(errorHandler())
 }
@@ -55,6 +56,7 @@ let auth = function(req, res, next){
 graph.setAppSecret(FacebookConfig.app_secret);
 server.listen(port)
 console.log(`${env} mode`)
+
 concerto
   .set('views', __dirname + '/app/views')
   .use(express.static(__dirname + '/public'))
@@ -68,6 +70,8 @@ concerto
   .use(cookieParser())
   .use(cors())
   .use(session({secret: 'anything'}))
+  .use(passport.initialize())
+  .use(passport.session())
   .get('/',
     (req, res)=> {
       res.render('index')
@@ -82,13 +86,13 @@ concerto
       content: ''
     })
     console.log('log out...')
-    io.on('connection', function (socket) {
-      io.to(socket.id).emit('loggedOut', {message: 'User has logged out'});
-      socket.on('disconnect', function(){
-        console.log('Mr. Gorbachev, TEAR DOWN THIS SOCKET');
-        // socket.destroy()
-      })
-    });
+    // io.on('connection', function (socket) {
+    //   io.to(socket.id).emit('loggedOut', {message: 'User has logged out'});
+    //   socket.on('disconnect', function(){
+    //     console.log('Mr. Gorbachev, TEAR DOWN THIS SOCKET');
+    //     // socket.destroy()
+    //   })
+    // });
     res.redirect('/')
   })
   .get('/logmein', (req, res) => {
@@ -101,6 +105,12 @@ concerto
       return userCtrl.getUsers(req, res);
     }
   )
+  .get('/section/sessions/:id',
+    (req, res) => {
+      return sessionCtrl.getSessionsBySection(req, res)
+    }
+  )
+
   .get('/users/:id',
     (req, res) => {
       return userCtrl.getUser(req, res);
@@ -132,6 +142,11 @@ concerto
       return studentUserCtrl.addStudentUser(req, res);
     }
   )
+  .patch('/studentusers/courses/:id',
+    (req, res) => {
+      return studentUserCtrl.updateStudentUser(req, res);
+    }
+  )
   .post('/fb/likes/', (req, res) => {
      return facebookCtrl.addLike(req, res);
   })
@@ -151,10 +166,21 @@ concerto
       return instructorUserCtrl.getInstructorUser(req, res);
     }
   )
+  .get('/instructorusers/users/:id',
+    (req, res) => {
+      return instructorUserCtrl.findInstructorUser(req, res);
+    }
+  )
   .post('/instructorusers',
     (req, res) => {
       console.log(req.body)
       return instructorUserCtrl.addInstructorUser(req, res);
+    }
+  )
+  .patch('/instructorusers/:id',
+    (req, res) => {
+      console.log(req.body)
+      return instructorUserCtrl.updateInstructorUser(req, res);
     }
   )
   .post('/users',
@@ -247,6 +273,11 @@ concerto
       return sectionCtrl.getSections(req, res);
     }
   )
+  .get('/sections/:id',
+    (req, res) => {
+      return sectionCtrl.getSection(req, res);
+    }
+  )
   .get('/photos/images/:id', (req, res) => {
     graph.get(req.params.id + '?fields=images', (err, response) => {
       res.json(response.images)
@@ -264,16 +295,24 @@ concerto
       res.json(response)
     })
   })
-  .get('/sections/:id',
-    (req, res) => {
-      return sectionCtrl.getSections(req, res);
-    }
-  )
   .post('/sections',
     (req, res) => {
       return sectionCtrl.addSection(req, res);
     }
   )
+  .post('/section/enrollment/:id',
+    (req, res) => {
+      console.log(req.body);
+      return sectionCtrl.requestSection(req, res);
+  })
+  .post('/section/approval/:id',
+    (req, res) => {
+      return sectionCtrl.approveStudent(req, res);
+  })
+  .post('/section/deny/:id',
+  (req, res) => {
+    return sectionCtrl.denyStudent(req, res);
+  })
   .get('/sessions',
     (req, res) => {
       return sessionCtrl.getSessions(req, res);
@@ -282,6 +321,21 @@ concerto
   .get('/sessions/:id',
     (req, res) => {
       return sessionCtrl.getSession(req, res);
+    }
+  )
+  .patch('/sessions/:id',
+    (req, res) => {
+      return sessionCtrl.toggleActive(req, res);
+    }
+  )
+  .patch('/sessions/join/:id',
+    (req, res) => {
+      return sessionCtrl.joinSession(req, res)
+    }
+  )
+  .patch('/sessions/exit/:id',
+    (req, res) => {
+      return sessionCtrl.exitSession(req, res)
     }
   )
   .get('/likes/:id',
@@ -319,6 +373,18 @@ concerto
       return sessionChatCtrl.addSessionChat(req, res);
     }
   )
+  .post('/sessionchats/initialize/:id',
+    (req, res) => {
+      sessionChatCtrl.startSessionChat(req, res).then(
+        (response) => {
+          console.log(response)
+          io.of('/roomlist').on('connection', function (socket) {
+            console.log('We SOCKETING YO')
+            socket.emit('chatconnected')
+            })
+          });
+        }
+      )
   .get('/sessionmessages',
     (req, res) => {
       return sessionMessageCtrl.getSessionMessages(req, res);
@@ -354,9 +420,20 @@ concerto
       return studentGroupCtrl.getStudentGroup(req, res);
     }
   )
+  .get('/authed/me', auth,
+      (req, res) => {
+        console.log(req.user)
+        res.json(req.user)
+      }
+    )
   .get('/studentgroups/:id',
     (req, res) => {
       return studentGroupCtrl.getStudentGroup(req, res);
+    }
+  )
+  .get('/sectiongroups/:id',
+    (req, res) => {
+      return studentGroupCtrl.getSectionGroups(req, res);
     }
   )
   .post('/studentgroups/',
@@ -374,8 +451,7 @@ concerto
       return courseCtrl.addCourse(req, res);
     }
   )
-  .use(passport.initialize())
-  .use(passport.session())
+
   // .listen(port)
 
 passport.use('facebook',
@@ -405,17 +481,17 @@ passport.use('facebook',
                   User.findOneAndUpdate({ fbId: profile.id}, {
                     $set: {currentToken: accessToken}, $inc: { logins: 1} }, { new: true }, function(err, doc){
                       user = doc;
-                      io.on('connection', function (socket) {
-                        console.log('I am the user in Socket IO', user);
-                        sockets[profile.id] = socket.id;
-                        console.log(sockets)
-                        io.to(sockets[profile.id]).emit('userEmitted', user);
-                        console.log('USER EMITTED', Date.now())
-                        socket.on('disconnect', function(){
-                          // socket.destroy()
-                        })
-                      });
-                      return done(err, user, created);
+                      // io.on('connection', function (socket) {
+                      //   console.log('I am the user in Socket IO', user);
+                      //   sockets[profile.id] = socket.id;
+                      //   console.log(sockets)
+                      //   io.to(sockets[profile.id]).emit('userEmitted', user);
+                      //   console.log('USER EMITTED', Date.now())
+                      //   socket.on('disconnect', function(){
+                      //     // socket.destroy()
+                      //   })
+                      // });
+                      return done(null, user);
                   })
                 } else {
                   graph.batch([{
@@ -482,12 +558,12 @@ passport.use('facebook',
                       // socket.destroy()
                     })
                   })
-                    return done(err, user, created);
+                    return done(null, user);
                 };
         });
-      process.nextTick(function () {
-
-      })
+      // process.nextTick(function () {
+      //
+      // })
     }
   )
 );
@@ -498,8 +574,8 @@ passport.serializeUser(
   }
 );
 passport.deserializeUser(
-  (user, done) => {
-    done(null, user);
+  (obj, done) => {
+    done(null, obj);
   }
 );
 
@@ -507,6 +583,6 @@ passport.deserializeUser(
 // require('./config/passport')(concerto);
 concerto
   .get('/auth/facebook', passport.authenticate('facebook', { scope: ['user_status', 'user_likes', 'user_posts', 'user_friends', 'email', 'user_education_history'] }))
-  .get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/#/login' }))
+  .get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/#/profile', failureRedirect: '/#/login' }))
 console.log('Listening on port ' + port + '...');
 require('./config/db.js');
