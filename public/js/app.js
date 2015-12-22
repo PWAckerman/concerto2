@@ -68,25 +68,15 @@ angular.module('concerto', ['ui.router', 'btford.socket-io', 'ngAnimate', '720kb
       };
     });
 }])
-.factory('socket', function (socketFactory) {
-  var myIoSocket = io.connect(':3030');
-  var mySocket = socketFactory({
-    ioSocket: myIoSocket
-  });
-  socketFactory.disconnect = function(){
-    ioSocket.disconnect()
-  }
-  mySocket.forward('error');
-  return mySocket;
-})
 .factory('chatSocket', function (socketFactory){
-  var myIoSocket = io.connect('http://localhost:3030/roomlist')
+  var myIoSocket = io.connect(':3030/roomlist')
   var mySocket = socketFactory({
     ioSocket: myIoSocket
   });
   socketFactory.disconnect = function(){
     ioSocket.disconnect()
   }
+
   mySocket.forward('error')
   console.log('sockets, bro')
   return mySocket

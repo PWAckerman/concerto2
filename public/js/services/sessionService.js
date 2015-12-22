@@ -5,6 +5,18 @@ angular.module('concerto').service('sessionService',['$http', function($http){
       url: 'sessions/' + id
     })
   }
+  this.getSessionChat = function(sessionId){
+    return $http({
+      method: 'GET',
+      url: 'sessionchats/bysession/' + sessionId
+    })
+  }
+  this.getSessionMessageBySessionChat = function(sessionChatId){
+    return $http({
+      method: 'GET',
+      url: 'sessionmessages/bysessionchat/' + sessionChatId
+    })
+  }
   this.toggleActive = function(id, value){
     return $http({
       method: 'PATCH',

@@ -1,4 +1,4 @@
-angular.module('concerto').controller('mainCtrl', ['$scope', 'authService', 'socket', '$timeout', '$state', function($scope, authService, socket, $timeout, $state){
+angular.module('concerto').controller('mainCtrl', ['$scope', 'authService', '$timeout', '$state', function($scope, authService, $timeout, $state){
   // socket.forward('userEmitted', $scope)
   // socket.forward('loggedOut', $scope)
   //wavething
@@ -54,7 +54,7 @@ angular.module('concerto').controller('mainCtrl', ['$scope', 'authService', 'soc
       console.log('did it')
       $scope.hideGoodToast = true;
     }, 5000)
-    $state.go('profile')
+    $state.go('auth.profile')
   })
   // $scope.$on('socket:loggedOut', function(ev, data){
   //   console.log(data);

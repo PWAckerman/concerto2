@@ -125,11 +125,18 @@ angular.module('concerto').controller('profileCtrl', [ '$scope', '$state', 'auth
             $scope.newSection.instructor = response.data._id
             sectionService.addSection($scope.newSection).then(
               function(response){
-                console.log('Section Submitted', response.data)
+                // console.log('Section Submitted', response.data)
                 for(var i = 0; i < $scope.sessionCount; i++){
                   sectionService.addSession({
                     sectionId: response.data._id,
                     sessionNumber: i + 1
+                  }).then(function(response){
+                    // console.log('SESSION RESPONSE', response)
+                    sectionService.addSessionChat({
+                      sessionId: response.data._id
+                    }).then(function(response){
+                      console.log('You added sessions and sessionchats!')
+                    })
                   })
                 }
                 sectionService.updateInstructor($scope.newSection.instructor, { _id: response.data._id}).then(

@@ -1,4 +1,4 @@
-angular.module('concerto').service('authService', ['$rootScope', '$http', 'socket', '$q', function($rootScope, $http, socket, $q){
+angular.module('concerto').service('authService', ['$rootScope', '$http', '$q', function($rootScope, $http, $q){
   // socket.forward('userEmitted', $rootScope)
   // socket.forward('loggedOut', $rootScope)
   var user = null;

@@ -317,6 +317,94 @@
   overflow-y: scroll;
   overflow-x: hide;
 }
+.session-chat-container{
+  text-align: center;
+  position: fixed;
+  background-color: rgb(233, 224, 185);
+  right: 150px;
+  top: 0px;
+  width: 400px;
+  height: 100vh;
+}
+.session-chat-text-container{
+  margin-top: 70px;
+  display: inline-block;
+  width: 380px;
+  height: 80%;
+  border-radius: 10px;
+  background-color: white;
+  position: relative;
+}
+.session-chat-message-container{
+  position: absolute;
+  text-align: left;
+  bottom: 0px;
+  width: 100%;
+  height: 40px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-top: 2px solid rgb(210, 210, 210)
+}
+.session-chat-enter-button{
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  color: rgb(210, 210, 210);
+  font-size: 30px;
+  /*line-height: 40px;*/
+  padding-top: -5px;
+  bottom: 0px;
+  left: 0px;
+  width: 40px;
+  height: 40px;
+  border-bottom-left-radius: 10px;
+  border-right: 2px solid rgb(210, 210, 210);
+  transition: .5s;
+}
+.session-chat-enter-button:hover{
+  color: rgb(255, 255, 255);
+  background-color: rgb(19, 158, 54);
+  transition: .5s;
+}
+.session-chat-incoming-messages{
+  margin-top: 5px;
+  width: 95%;
+  height: 90%;
+  margin-left: 5px;
+  overflow-y: scroll;
+}
+.session-chat-incoming-message{
+  text-align: left;
+  width: 100%;
+  height: auto;
+  min-height: 50px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  transition: .5s;
+}
+.session-chat-incoming-message:hover{
+  background-color: rgb(228, 228, 228);
+  transition: .5s;
+}
+.session-chat-avatar{
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+}
+.session-chat-incoming-message-text{
+  display: inline-block;
+  color: black;
+  width: 300px;
+}
+.session-chat-new-message{
+  position: relative;
+  width: 320px;
+  top: 0px;
+  outline: none;
+  border: none;
+  display: inline-block;
+}
 .pros-students-container{
   position: fixed;
   padding: 10px;

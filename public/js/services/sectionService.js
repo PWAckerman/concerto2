@@ -68,6 +68,13 @@ angular.module('concerto').service('sectionService', ['$http', function($http){
       data: data
     })
   }
+  this.addSessionChat = function(data){
+    return $http({
+      method: 'POST',
+      url: '/sessionchats/',
+      data: data
+    })
+  }
   this.updateInstructor = function(id, data){
     return $http({
       method: 'PATCH',

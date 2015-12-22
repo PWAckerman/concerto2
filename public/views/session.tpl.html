@@ -17,12 +17,27 @@
   <div class="inline-block session-activate white-t EXIT" ng-show="userHasJoined" ng-click="leaveSession()" style="float: right;">
     EXIT
   </div>
-  <div ng-click="testSocket()" class="inline-block session-activate white-t">TEST THE SOCKET</div>
 </div>
 <div class="session-presentation-space">
   <video id="video" class="web-video" ng-hide="user.usertype === 'Student'"></video>
   <video id="returnVideo" class="web-video"></video>
 </div>
 <div class="session-attendance-container fade">
-  <img class="session-user fade" src="{{user.UID.profilePicture}}" ng-repeat="user in thisSession.joined"/>
+  <img class="session-user fade" ng-src="{{user.UID.profilePicture}}" ng-repeat="user in thisSession.joined"/>
+</div>
+<div class="session-chat-container fade">
+  <div class="session-chat-text-container">
+    <div class="session-chat-incoming-messages">
+      <div class="session-chat-incoming-message fadeinload" ng-repeat="message in sessionMessages track by $index">
+        <img class="session-chat-avatar" ng-src="{{message.img}}"/>
+        <div class="session-chat-incoming-message-text">{{message.content}}</div>
+      </div>
+    </div>
+    <div class="session-chat-message-container">
+      <form ng-submit="submitMessage()">
+      <div class="session-chat-enter-button" ng-click="submitMessage()">+</div>
+      <input class="session-chat-new-message" type="text" placeholder="Say something..." ng-model="newMessage.content"/>
+    </form>
+    </div>
+  </div>
 </div>

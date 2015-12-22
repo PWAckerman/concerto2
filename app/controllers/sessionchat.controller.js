@@ -45,3 +45,8 @@ exports.getSessionChat = (req, res) => {
     res.json(doc);
   })
 }
+
+exports.getSessionChatBySession = (req, res) => {
+  console.log(req.params.id);
+  SessionChat.findOne({sessionId: req.params.id}).exec((err, sessionChatDoc) => res.json(sessionChatDoc))
+}

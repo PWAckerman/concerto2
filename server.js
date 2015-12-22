@@ -47,7 +47,7 @@ if(env === 'development'){
 let auth = function(req, res, next){
       if(!req.isAuthenticated()){
         console.log('Some jerk is trying to access unauthorized endpoints');
-        res.status('401')
+        res.status(401).end()
       } else {
         next();
       }
@@ -368,6 +368,11 @@ concerto
       return sessionChatCtrl.getSessionChat(req, res);
     }
   )
+  .get('/sessionchats/bysession/:id',
+    (req, res) => {
+      return sessionChatCtrl.getSessionChatBySession(req, res);
+    }
+  )
   .post('/sessionchats',
     (req, res) => {
       return sessionChatCtrl.addSessionChat(req, res);
@@ -378,10 +383,6 @@ concerto
       sessionChatCtrl.startSessionChat(req, res).then(
         (response) => {
           console.log(response)
-          io.of('/roomlist').on('connection', function (socket) {
-            console.log('We SOCKETING YO')
-            socket.emit('chatconnected')
-            })
           });
         }
       )
@@ -393,6 +394,11 @@ concerto
   .get('/sessionmessages/:id',
     (req, res) => {
       return sessionMessageCtrl.getSessionMessage(req, res);
+    }
+  )
+  .get('/sessionmessages/bysessionchat/:id',
+    (req, res) => {
+      return sessionMessageCtrl.getSessionMessageBySessionChat(req, res)
     }
   )
   .post('/sessionmessages',
@@ -548,16 +554,16 @@ passport.use('facebook',
 
                     console.log('THE HEADERS THEY BURN', res[4].headers[3].value)
                   })
-                  io.on('connection', function (socket) {
-                    console.log('I am the user in Socket IO', user);
-                    sockets[profile.id] = socket.id;
-                    console.log(sockets)
-                    io.to(sockets[profile.id]).emit('userEmitted', user);
-                    console.log('USER EMITTED', Date.now())
-                    socket.on('disconnect', function(){
-                      // socket.destroy()
-                    })
-                  })
+                  // io.on('connection', function (socket) {
+                  //   console.log('I am the user in Socket IO', user);
+                  //   sockets[profile.id] = socket.id;
+                  //   console.log(sockets)
+                  //   io.to(sockets[profile.id]).emit('userEmitted', user);
+                  //   console.log('USER EMITTED', Date.now())
+                  //   socket.on('disconnect', function(){
+                  //     // socket.destroy()
+                  //   })
+                  // })
                     return done(null, user);
                 };
         });
@@ -578,6 +584,42 @@ passport.deserializeUser(
     done(null, obj);
   }
 );
+
+io.of('/roomlist').on('connection', function (socket) {
+  console.log('We SOCKETING YO')
+  socket.emit('chatconnected')
+  socket.on('SessionRoom', function(data){
+    console.log('I hear ya, session');
+    console.log('Data.session', JSON.stringify(data.room))
+    let room = data.room;
+    socket.join(room, function(err){
+      // console.log('CLIENT', socket.client)
+      // console.log('ROOMS', socket.rooms)
+      // socket.emit('roomjoined');
+      // socket.broadcast.to(socket.rooms[0]).emit('roomjoined', {data: 'data'});
+      io.of('/roomlist').in(room).emit('roomjoined', {data: 'data'});
+      // socket.in('room1').emit('roomjoined', {data: 'data'})
+    });
+    socket.on('newMessage', function(data){
+      console.log(data)
+      let x = {};
+      x.body = {
+        sessionChatId: data.message.chatSession,
+        user: data.message.user,
+        content: data.message.content,
+        img: data.message.img,
+        name: data.message.name
+      }
+      sessionMessageCtrl.addSessionMessage(x)
+      console.log(x);
+            io.of('/roomlist').in(room).emit('messagefeed', {message: x.body})
+          }
+        )
+      })
+
+    })
+
+
 
 // require("./config/strategies/facebook.strategy")
 // require('./config/passport')(concerto);

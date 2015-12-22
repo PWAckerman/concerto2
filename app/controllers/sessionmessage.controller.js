@@ -4,9 +4,11 @@ let Log = require('../controllers/log.controller.js');
 
 exports.addSessionMessage = (req, res) => {
   let entry = new SessionMessage({
-    sessionId: req.body.sessionId,
+    sessionChatId: req.body.sessionChatId,
     user: req.body.user,
     content: req.body.content,
+    name: req.body.name,
+    img: req.body.img
   });
 
   entry.save(
@@ -23,7 +25,7 @@ exports.addSessionMessage = (req, res) => {
             status: "Successful Database Addition",
             content: entry
           })
-          res.json(entry)
+          return entry
         }
       }
   );
@@ -38,4 +40,17 @@ exports.getSessionMessage = (req, res) => {
   SessionMessage.findById(req.params.id, (err, doc) => {
     res.json(doc);
   })
+}
+
+exports.getSessionMessageBySessionChat = (req, res) => {
+  console.log(req.params.id);
+  SessionMessage.find({sessionChatId: req.params.id}).deepPopulate(['user'], {
+    whitelist: [],
+    populate: {
+      'user': {
+        select: 'profilePicture'
+      }
+    },
+    rewrite: {}
+  }).exec((err, sessionMessageDoc) => res.json(sessionMessageDoc))
 }
