@@ -1,4 +1,4 @@
-angular.module('concerto').service('sessionService',['$http', function($http){
+angular.module('concerto').service('sessionService', ['$http', function($http){
   this.getSession = function(id){
     return $http({
       method: 'GET',

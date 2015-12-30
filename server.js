@@ -615,6 +615,9 @@ io.of('/roomlist').on('connection', function (socket) {
             io.of('/roomlist').in(room).emit('messagefeed', {message: x.body})
           }
         )
+    socket.on('stream', function(image){
+      io.of('/roomlist').in(room).emit('streamFeed', image)
+    })
       })
 
     })

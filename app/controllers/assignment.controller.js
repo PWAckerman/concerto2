@@ -6,8 +6,10 @@ exports.addAssignment = (req, res) => {
   let entry = new Assignment({
     title: req.body.title,
     instructions: req.body.instructions,
+    deliverables: req.body.deliverables,
     content: req.body.content,
-    dueDate: req.body.dueDate
+    dueDate: req.body.dueDate,
+    sessionId: req.body.sessionId
   });
 
   entry.save(
@@ -36,7 +38,7 @@ exports.getAssignments = (req, res) => {
 
 exports.getAssignment = (req, res) => {
   console.log(req.params.id);
-  Assignment.findById(req.params.id, (err, doc)=> {
+  Assignment.find({sessionId: req.params.id}, (err, doc)=> {
     res.json(doc);
   })
 }

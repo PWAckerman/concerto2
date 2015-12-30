@@ -1,6 +1,6 @@
 <div class="top-spacer"></div>
 <div class="session-tools">
-  <div class="inline-block session-tool">
+  <div class="inline-block session-tool" ng-click="seeAssignment()">
     <div class="icon-clipboard white-t big-icon inline-block"></div>
     <div style="font-size: 10px" class="white-t">ASSIGNMENT</div>
   </div>
@@ -11,24 +11,25 @@
   <div class="inline-block session-activate white-t {{button}}" ng-hide="user.usertype === 'Student'" ng-click="toggleActive()">
     {{button}} SESSION
   </div>
-  <div ng-hide="userHasJoined"><div class="inline-block session-activate white-t" ng-show="user.usertype === 'Student'" ng-click="joinSession()" style="float: right;">
-    JOIN
+  <div ng-hide="userHasJoined" class="inline-block fade"><div class="inline-block session-activate white-t" ng-show="user.usertype === 'Student'" ng-click="joinSession()" style="float: right;">
+    JOIN SESSION
   </div></div>
-  <div class="inline-block session-activate white-t EXIT" ng-show="userHasJoined" ng-click="leaveSession()" style="float: right;">
-    EXIT
-  </div>
+  <div ng-show="userHasJoined" class="inline-block fade"><div class="inline-block session-activate white-t EXIT" ng-show="user.usertype === 'Student'" ng-click="leaveSession()" style="float: right;">
+    EXIT SESSION
+  </div></div>
 </div>
 <div class="session-presentation-space">
-  <video id="video" class="web-video" ng-hide="user.usertype === 'Student'"></video>
-  <video id="returnVideo" class="web-video"></video>
+  <video id="videosource" class="web-video" style="display:none;"></video>
+  <canvas id="preview" class="video-preview" style="display: none;"></canvas>
+  <img id="returnVideo" class="video-preview"></img>
 </div>
 <div class="session-attendance-container fade">
-  <img class="session-user fade" ng-src="{{user.UID.profilePicture}}" ng-repeat="user in thisSession.joined"/>
+  <div class="fade" ng-repeat="user in thisSession.joined"><img class="session-user fade" ng-src="{{user.UID.profilePicture}}"/></div>
 </div>
 <div class="session-chat-container fade">
   <div class="session-chat-text-container">
-    <div class="session-chat-incoming-messages">
-      <div class="session-chat-incoming-message fadeinload" ng-repeat="message in sessionMessages track by $index">
+    <div class="session-chat-incoming-messages" id="message-scroll" scroll-glue>
+      <div class="session-chat-incoming-message fadeinload" ng-repeat="message in sessionMessages track by $index" >
         <img class="session-chat-avatar" ng-src="{{message.img}}"/>
         <div class="session-chat-incoming-message-text">{{message.content}}</div>
       </div>

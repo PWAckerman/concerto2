@@ -1,3 +1,75 @@
+textarea{
+  resize: none;
+}
+.new-assignment-container{
+  display: inline-block;
+  text-align: center;
+  width: 300px;
+  height: auto;
+}
+.new-assignment-title{
+  font-size: 20px;
+  border: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: 1px solid rgb(190, 190, 190);
+  width: 100%;
+  outline: none;
+  padding: 10px;
+}
+.new-assignment-instructions{
+  border: none;
+  border-bottom: 1px solid rgb(190, 190, 190);
+  width: 100%;
+  outline: none;
+  padding: 10px;
+  height: 100px;
+}
+.new-assignment-deliverables{
+  border: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 100%;
+  outline: none;
+  padding: 10px;
+  margin-top: -4px;
+}
+.assignment-container{
+  display: inline-block;
+  text-align: center;
+  width: 300px;
+  height: auto;
+}
+.assignment-title{
+  font-size: 20px;
+  border: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: 1px solid rgb(190, 190, 190);
+  width: 100%;
+  outline: none;
+  padding: 10px;
+}
+.assignment-instructions{
+  border: none;
+  border-bottom: 1px solid rgb(190, 190, 190);
+  width: 100%;
+  outline: none;
+  padding: 10px;
+  height: auto;
+}
+.assignment-deliverables{
+  border: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 100%;
+  outline: none;
+  padding: 10px;
+  margin-top: -4px;
+}
+.goldenrod-b{
+  background-color: rgb(194, 186, 85);
+}
 .scheduled:hover{
   height: 60px;
   transition: .5s;
@@ -131,6 +203,13 @@
   width: 15px;
   height: 15px;
   background-color: rgb(161, 40, 40);
+}
+.video-preview{
+  position: relative;
+  position: inline-block;
+  margin-top: 100px;
+  width: 320px;
+  height: 180px;
 }
 .session-presentation-space{
   background-color: #269;

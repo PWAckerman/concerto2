@@ -1,0 +1,32 @@
+</br>
+</br>
+</br>
+</br>
+<div class="row-container" >
+  <div class="row" ng-show="showAssignmentBuilder">
+    <div class="new-assignment-container">
+    <div class="white-t" style="font-size: 30px; font-weight: 200; text-align: center;">CREATE AN ASSIGNMENT</div>
+    <form ng-submit="submitAssignment()">
+      <input type="text" placeholder="Title" ng-model="newAssignment.title" class="new-assignment-title"/>
+      <textarea type="text" placeholder="Instructions" ng-model="newAssignment.instructions" class="new-assignment-instructions"></textarea>
+      <input type="text" placeholder="Deliverables" ng-model="newAssignment.deliverables" class="new-assignment-deliverables"/>
+      <button class="submit" type="submit">S U B M I T</button>
+    </form>
+  </div>
+  </div>
+  <div class="row" ng-hide="showAssignmentBuilder">
+    <div class="assignment-container">
+    <div class="white-t" style="font-size: 30px; font-weight: 200;" class="assignment-title goldenrod-b">{{assignment[0].title}}</div>
+      <div class="assignment-instructions goldenrod-b">
+        {{assignment[0].instructions}}
+      </div>
+      <div class="assignment-deliverables goldenrod-b">{{assignment[0].deliverables}}</div>
+      <button type="submit">UPLOAD</button>
+    </div>
+  </div>
+  <div class="row" ng-hide="showAssignmentBuilder">
+    <span class="white-t" style="font-size: 30px; font-weight: 200;">VIEW ASSIGNMENT</span>
+  </br>
+    <div style="padding: 20px; border-radius: 300px; width: 220px; height: 220px; background-color: rgb(194, 186, 85);"><div class="icon-document white-t" style="font-size: 200px;"></div></div>
+  </div>
+</div>

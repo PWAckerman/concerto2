@@ -4,7 +4,9 @@ let Schema = mongoose.Schema;
 let ObjectId = mongoose.Schema.Types.ObjectId;
 
 let assignmentSchema = new Schema({
+  sessionId: {type: String, ref: 'Session'},
   title: String,
+  deliverables: String,
   created: { type: Date, default: Date.now},
   modified: Date,
   instructions: String,

@@ -1,4 +1,4 @@
-angular.module('concerto', ['ui.router', 'btford.socket-io', 'ngAnimate', '720kb.datepicker'])
+angular.module('concerto', ['ui.router', 'btford.socket-io', 'ngAnimate', '720kb.datepicker', 'luegg.directives'])
 .config(['$stateProvider','$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider){
   $stateProvider
     .state('auth', {
@@ -48,6 +48,14 @@ angular.module('concerto', ['ui.router', 'btford.socket-io', 'ngAnimate', '720kb
         }
       }
     )
+    .state('auth.assignment', {
+      url: '/assignment/:id',
+      templateUrl: 'views/assignment.tpl.html',
+      controller: 'assignmentCtrl',
+      resolve: {
+        
+      }
+    })
 
     $urlRouterProvider.otherwise('login');
 
