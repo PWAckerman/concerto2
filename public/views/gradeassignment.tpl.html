@@ -1,0 +1,39 @@
+<div class="top-spacer"></div>
+<div class="row-container">
+  <div class="row">
+    <div class="row-header white-t">{{submissions[0].assignmentId.title}}</div>
+    <div class="submission-to-grade-container slush-b" ng-repeat="submission in submissions">
+      <img class="submission-profile-pic" ng-src="{{submission.studentId.profilePicture}}"/>
+      <div class="submission-to-grade-name">{{submission.studentId.name}}</div>
+      <div class="needs-grading" ng-click="selectSubmission(submission)"><div class="icon-caution needs-grading-icon"></div></div>
+    </div>
+  </div>
+</div>
+<div class="grading-modal-overlay fade" ng-show="showGradeModal">
+  <div class="grading-modal-box slush-b come-in">
+    <div class="modal-row-container">
+      <div class="modal-row align-right" ng-click="toggleGradeModal()">x</div>
+    </div>
+    <div class="modal-row-container">
+      <div class="modal-row">
+        {{selectedSubmission.studentId.name}}
+      </div>
+    </div>
+    <div class="modal-row-container">
+      <div class="modal-row">
+        <div class="grading-submission-content">
+          {{selectedSubmission.content}}
+        </div>
+      </div>
+    </div>
+    <div class="your-submission-grade-banner">
+      GRADE
+    </div>
+    <div class="your-submission-grade">
+      <form ng-submit="submitGrade()">
+      <input type="text" class="submission-grade-input" placeholder="_ _" ng-model="value"></input>
+      <button type="submit" ng-hide="true"></button>
+    </form>
+    </div>
+  </div>
+</div>

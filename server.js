@@ -5,6 +5,7 @@ let express = require('express'),
     studentUserCtrl = require('./app/controllers/studentuser.controller.js'),
     instructorUserCtrl = require('./app/controllers/instructoruser.controller.js'),
     assignmentCtrl = require('./app/controllers/assignment.controller.js'),
+    submissionCtrl = require('./app/controllers/submission.controller.js'),
     courseCtrl = require('./app/controllers/course.controller.js'),
     gradeCtrl = require('./app/controllers/grade.controller.js'),
     gradeRecordCtrl = require('./app/controllers/graderecord.controller.js'),
@@ -203,6 +204,37 @@ concerto
       return assignmentCtrl.addAssignment(req, res);
     }
   )
+  // .get('/submissions',
+  //   (req, res) => {
+  //     return submissionCtrl.getSubmissions(req, res)
+  //   }
+  // )
+  .get('/submissions/assignments/:id',
+    (req, res) => {
+      return submissionCtrl.getSubmission(req, res)
+    }
+  )
+  .get('/submissions/:id',
+    (req, res) => {
+      return submissionCtrl.getSubmission(req, res)
+    }
+  )
+  .patch('/submissions/:id',
+    (req, res) => {
+      return submissionCtrl.toggleIsGraded(req, res);
+    }
+)
+  .get('/submissions/:assignmentId/student/:studentId',
+    (req, res) => {
+      return submissionCtrl.getSubmissionByStudentAndAssignment(req, res)
+    }
+  )
+  .post(
+    '/submissions',
+    (req, res) => {
+      return submissionCtrl.addSubmission(req, res)
+    }
+  )
   .get('/courses',
     (req, res) => {
       return courseCtrl.getCourses(req, res);
@@ -216,6 +248,11 @@ concerto
   .get('/grades/:id',
     (req, res) => {
       return gradeCtrl.getGrade(req, res);
+    }
+  )
+  .get('/grades/submissions/:id',
+    (req, res) => {
+      return gradeCtrl.findGrade(req, res);
     }
   )
   .post('/grades',

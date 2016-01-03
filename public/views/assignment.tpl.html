@@ -1,7 +1,4 @@
-</br>
-</br>
-</br>
-</br>
+<div class="top-spacer"></div>
 <div class="row-container" >
   <div class="row" ng-show="showAssignmentBuilder">
     <div class="new-assignment-container">
@@ -16,17 +13,32 @@
   </div>
   <div class="row" ng-hide="showAssignmentBuilder">
     <div class="assignment-container">
-    <div class="white-t" style="font-size: 30px; font-weight: 200;" class="assignment-title goldenrod-b">{{assignment[0].title}}</div>
+    <div style="font-size: 30px; font-weight: 200;" class="assignment-title goldenrod-b white-t">{{assignment[0].title}}</div>
       <div class="assignment-instructions goldenrod-b">
         {{assignment[0].instructions}}
       </div>
       <div class="assignment-deliverables goldenrod-b">{{assignment[0].deliverables}}</div>
-      <button type="submit">UPLOAD</button>
+      <button type="submit" ng-show="showSubmissionButton" ng-click="showSubmissionModal()">S U B M I T</button>
+      <button type="submit" ng-show="user.usertype === 'Instructor'" ng-click="goGrade()">GRADE SUBMISSIONS</button>
     </div>
   </div>
-  <div class="row" ng-hide="showAssignmentBuilder">
-    <span class="white-t" style="font-size: 30px; font-weight: 200;">VIEW ASSIGNMENT</span>
-  </br>
-    <div style="padding: 20px; border-radius: 300px; width: 220px; height: 220px; background-color: rgb(194, 186, 85);"><div class="icon-document white-t" style="font-size: 200px;"></div></div>
+  <div class="row" ng-show="showSubmission" style="margin-top: -425px;">
+    <div class="your-submission">
+    <div class="your-submission-header">YOUR SUBMISSION</div>
+    <div class="your-submission-title">{{assignment[0].title}}</div>
+    <div class="your-submission-date">{{studentSubmission[0].created | date:'medium'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <div class="your-submission-body">{{studentSubmission[0].content}}</div>
+    <div class="your-submission-grade-banner goldenrod-b">GRADE</div>
+    <div class="your-submission-grade"><div class="your-submission-grade-text">
+      {{studentSubmission[0].grade}}
+    </div></div>
+    </div>
+  </div>
+</div>
+<div class="assignment-submission-modal-overlay fade" ng-show="submissionModal">
+  <div class="assignment-submission-modal-box slush-b come-in">
+    <div class="submission-header">ASSIGNMENT BODY</div>
+    <textarea placeholder="Paste the body of your assignment here..." class="submission-body" ng-model="newSubmission.content"></textarea>
+    <button type="submit" class="assignment-submit submit assignment-bottom" ng-click="submitSubmission()">S U B M I T</button>
   </div>
 </div>

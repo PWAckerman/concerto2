@@ -53,7 +53,17 @@ angular.module('concerto', ['ui.router', 'btford.socket-io', 'ngAnimate', '720kb
       templateUrl: 'views/assignment.tpl.html',
       controller: 'assignmentCtrl',
       resolve: {
-        
+
+      }
+    })
+    .state('auth.assignmentgrade', {
+      url: '/assignment/:id/grade',
+      templateUrl: 'views/gradeassignment.tpl.html',
+      controller: 'assignmentgradeCtrl',
+      resolve: {
+        submissions: function(submissionService, $stateParams){
+          return submissionService.getSubmissions($stateParams.id)
+        }
       }
     })
 
