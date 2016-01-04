@@ -11,6 +11,12 @@ angular.module('concerto').service('sectionService', ['$http', function($http){
       url: 'sections/'
     })
   }
+  this.getTopLike = function(id){
+    return $http({
+      method: 'GET',
+      url: 'toplikes/' + id
+    })
+  }
   this.getGroups = function(id){
     return $http({
       method: 'GET',

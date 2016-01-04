@@ -1,4 +1,8 @@
 angular.module('concerto').controller('sectionCtrl', ['$scope','$stateParams','$state','sectionService','authService', 'sessions', function($scope, $stateParams, $state, sectionService, authService, sessions){
+  $scope.topLike = {
+    name: "N/A",
+    image: "http://icons.iconarchive.com/icons/iconsmind/outline/256/Like-2-icon.png"
+  }
   $scope.getSectionGroups = function(){
     sectionService.getGroups($stateParams.id).then(
       function(response){
@@ -10,6 +14,15 @@ angular.module('concerto').controller('sectionCtrl', ['$scope','$stateParams','$
     )
   }
   console.log(sessions)
+  $scope.getTopLike = function(){
+    sectionService.getTopLike($stateParams.id).then(
+      function(response){
+        if(response.data !== null){
+          $scope.topLike = response.data.like
+        }
+      }
+    )
+  }
   $scope.sessions = sessions.data;
   $scope.addSectionGroup = function(){
     $scope.newGroup.members = $scope.newGroup.members.map(
@@ -43,6 +56,7 @@ angular.module('concerto').controller('sectionCtrl', ['$scope','$stateParams','$
   }
   $scope.getStudents()
   $scope.getSectionGroups();
+  $scope.getTopLike();
   $scope.newGroup = {courseId: $scope.selectedCourse.courseId._id,
                      sectionId: $stateParams.id
                     }

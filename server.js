@@ -31,6 +31,7 @@ let express = require('express'),
     cookieParser = require('cookie-parser'),
     requestify = require('requestify'),
     errorHandler = require('errorhandler'),
+    cronRunner = require('node-schedule'),
     server = require('http').Server(concerto),
     io = require('socket.io')(server),
     User = require('./app/models/user.model.js'),
@@ -41,7 +42,7 @@ let express = require('express'),
     Section = require('./app/models/section.model.js'),
     FBLike = require('./app/models/fblike.model.js'),
     TopLike = require('./app/models/topLike.model.js'),
-    port = 3030,
+    port = process.env.PORT || 3030,
     sockets = {},
     env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -497,7 +498,11 @@ concerto
       return courseCtrl.addCourse(req, res);
     }
   )
-
+  .get('/toplikes/:id',
+    (req, res) => {
+      TopLike.findOne({sectionId: req.params.id}).exec((err, doc) => res.json(doc))
+    }
+  )
   // .listen(port)
 
 passport.use('facebook',
@@ -661,80 +666,93 @@ io.of('/roomlist').on('connection', function (socket) {
       })
 
     })
-
-let sections = '';
-let likeAggregation = []
-Section
-  .find()
-  .deepPopulate(['students', 'students.UID'])
-  .exec(
-    (err, sectionDoc) => {
-      sections = sectionDoc.map(function(section){
-        return {
-                section: section._id,
-                users: section.students.map(
-                            function(student){
-                              return student.UID._id
-                            })
-                }
-      });
-      console.log(sections)
-      sections.map(function(section){
-        return section.users.map(function(user){
-          return FBLike.find({user: user}).exec((err, doc) => doc)
-        }).map(function(like){
-           like.then(function(res){
-            likeAggregation.push({
-              likes: res,
-              section: section.section
+//Run this job at the end of every hour to update the top likes for each course-section
+let job = cronRunner.scheduleJob('* 59 * * * *', function(){
+  let sections = '';
+  let likeAggregation = []
+  //!!!Migrate this to mongo's aggregation pipeline to take responsibility off the server to perform these tasks
+  //FIND ALL THE SECTIONS
+  Section
+    .find()
+    //deep populate for access to student's user ids
+    .deepPopulate(['students', 'students.UID'])
+    .exec(
+      (err, sectionDoc) => {
+        //map over each section and create section/userId projection objects
+        sections = sectionDoc.map(function(section){
+          return {
+                  section: section._id,
+                  users: section.students.map(
+                              function(student){
+                                return student.UID._id
+                              })
+                  }
+        });
+        console.log(sections)
+        //Map over sections and their users, find their facebook likes, associate facebook likes with section
+        sections.map(function(section){
+          return section.users.map(function(user){
+            return FBLike.find({user: user}).exec((err, doc) => doc)
+          }).map(function(like){
+             like.then(function(res){
+              likeAggregation.push({
+                likes: res,
+                section: section.section
+              })
             })
           })
         })
-      })
-    });
-setTimeout(function(){
-  let likes = likeAggregation.reduce(function(acc, currentValue){
-    if(!acc[currentValue.section]){
-      acc[currentValue.section] = currentValue.likes
-    } else if (acc[currentValue.section]){
-      currentValue.likes.forEach(function(like){
-        acc[currentValue.section].push(like)
-      })
-    }
-    return acc
-  }, {})
-  console.log(likes)
-  let sectionLikeCounts = Object.keys(likes).map(function(key){
-    return {section: key,
-      likeCount: likes[key].reduce(function(acc, like){
-      if(!acc[like.id]){
-        acc[like.id] = 1
-      } else if(acc[like.id]){
-        acc[like.id]++;
-      }
-      return acc;
-    }, {})}
-  }).map(function(countObj, ind){
-    let result = []
-    for(var like in countObj.likeCount){
-      result.push([countObj.likeCount[like], like])
-    }
-    return { section: countObj.section,
-      topLike: result.sort()[result.length - 1][1]
-    };
-  }).map(function(section){
-    FBLike.findOne({id: section.topLike}).exec((err, doc) => {
-      let entry = new TopLike({
-        sectionId: section.section,
-        like: doc
       });
-
-      entry.save((err, entry) => {
-        console.log(entry)
+  setTimeout(function(){
+    //push all the likes into the same section/likes pairing
+    let likes = likeAggregation.reduce(function(acc, currentValue){
+      if(!acc[currentValue.section]){
+        acc[currentValue.section] = currentValue.likes
+      } else if (acc[currentValue.section]){
+        currentValue.likes.forEach(function(like){
+          acc[currentValue.section].push(like)
+        })
+      }
+      return acc
+    }, {})
+    console.log(likes)
+    //count the likes in each section
+    let sectionLikeCounts = Object.keys(likes).map(function(key){
+      return {section: key,
+        likeCount: likes[key].reduce(function(acc, like){
+        if(!acc[like.id]){
+          acc[like.id] = 1
+        } else if(acc[like.id]){
+          acc[like.id]++;
+        }
+        return acc;
+      }, {})}
+      //shape document for sorting
+    }).map(function(countObj, ind){
+      let result = []
+      for(var like in countObj.likeCount){
+        result.push([countObj.likeCount[like], like])
+      }
+      //return the id of the highest ranked like and associate with a sectionId
+      return { section: countObj.section,
+        topLike: result.sort()[result.length - 1][1]
+      };
+    }).map(function(section){
+      //embed the like information for easier front end use
+      FBLike.findOne({id: section.topLike}).exec((err, doc) => {
+        let entry = new TopLike({
+          sectionId: section.section,
+          like: doc
+        });
+        //save doc to db
+        entry.save((err, entry) => {
+          console.log(entry)
+        })
       })
     })
-  })
-}, 5000);
+  }, 5000);
+})
+
 // require("./config/strategies/facebook.strategy")
 // require('./config/passport')(concerto);
 concerto

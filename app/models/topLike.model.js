@@ -5,7 +5,8 @@ let ObjectId = mongoose.Schema.Types.ObjectId;
 
 let topLikeSchema = new Schema({
   sectionId: String,
-  like: Object
+  like: Object,
+  created: {type: Date, default: Date.now}
 })
 
 module.exports = mongoose.model('TopLike', topLikeSchema)

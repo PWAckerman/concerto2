@@ -31,7 +31,12 @@
 
 </div>
 </div>
-<div class="bottom-dash coldriver-b"></div>
+<div class="bottom-dash coldriver-b">
+  <div class="top-like-container">
+    <img class="top-like-img" ng-src="{{topLike.image}}"/>
+    <div class="top-like-name white-t">{{topLike.name}}</div>
+  </div>
+</div>
 <div><img class="avatar fadeinload user-dash-profile" ng-src="{{selectedCourse.instructor.UID.profilePicture}}"/></div>
 <div class="avatar-shadow come-in fade" style="text-align: center; left: 45%;">
 <div style="color: white; font-size: 20px; margin-top: 20px; font-weight: 200;">{{selectedCourse.courseId.topicIdentifier}}-{{selectedCourse.courseId.courseNumber}}-{{selectedCourse.sectionNumber}}</div>
